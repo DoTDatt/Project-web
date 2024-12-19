@@ -1,0 +1,48 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="440"
+             x:Class="MangaReader.MangaDetail.Overview">
+   
+   
+    <Grid ColumnDefinitions="6*, 5*">
+        <StackPanel Grid.Column="0"
+                    Margin="20 ">
+            <TextBlock Name="TitleTextBlock" FontSize="32"
+                       TextWrapping="Wrap"
+                       FontWeight="Medium"
+                       TextTrimming="WordEllipsis">
+                Dragon ball Dragon ball Dragon ball Dragon ball
+                Dragon ball
+            </TextBlock>
+            
+            <TextBlock Name="ChapterNumberTextBlock" Margin="0 10 0 10" 
+                       FontWeight="Heavy"
+                       FontSize="15" TextWrapping="Wrap">
+                123 chapters
+            </TextBlock>
+            
+            <TextBlock Name="DescriptionTextBlock" TextWrapping="Wrap"
+                       FontWeight="Medium" TextAlignment="Left">
+                This is description. This is description.  This is description. 
+                This is description.  This is description.  This is description. 
+                This is description.  This is description. This is description. 
+                This is description. This is description.  This is description. 
+                This is description.  This is description.  This is description. 
+                This is description.  This is description. This is description. 
+                This is description.  This is description.  This is description. 
+                This is description.  This is description.  This is description. 
+                This is description.  This is description.  This is description. 
+                This is description. 
+            </TextBlock>
+        </StackPanel>
+        <Border Grid.Column="1" Name="Border"
+                Background="Gray">
+            <Image Name="CoverImage" 
+                   Stretch="UniformToFill"/>
+        </Border>
+    </Grid>
+    
+    
+</UserControl>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="MangaReader/MainWindow.axaml" value="MangaReader/MangaReader.csproj" />
+        <entry key="MangaReader/MangaList/ItemControl.axaml" value="MangaReader/MangaReader.csproj" />
+        <entry key="MangaReader/MangaList/View.axaml" value="MangaReader/MangaReader.csproj" />
+        <entry key="MangaReader/ViewCommon/ErrorPanel.axaml" value="MangaReader/MangaReader.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

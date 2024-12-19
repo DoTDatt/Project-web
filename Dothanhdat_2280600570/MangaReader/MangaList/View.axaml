@@ -1,4 +1,4 @@
-<Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -6,41 +6,65 @@
         xmlns:vc="clr-namespace:MangaReader.ViewCommon"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="250"
         Width="600" Height="800"
-        x:Class="MangaReader.MangaList.View">
-       <Panel>
-           <ProgressBar Name="LoadingProgressBar" IsIndeterminate="True"
-                        HorizontalAlignment="Center" IsVisible="False"/>
-           <vc:ErrorPanel Name="ErrorPanel" IsVisible="false"/>
-           <DockPanel Name="MainContent">
-               <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="10"
-                           HorizontalAlignment="Center">
-                   <Label Name="TotalMangaNumberLabel" VerticalAlignment="Center" FontWeight="Bold" Content="123 mangas"/>
-                   <Button Name="FirstButton" Click="FirstButton_OnClick">&lt;&lt;</Button>
-                   <Button Name="PrevButton" Click="PrevButton_OnClick">&lt; Prev</Button>
-                   <Button Name="CurrentPageButton" Background="DarkOrange" Foreground="Black">
-                       page 1 of 234
-                       <Button.Flyout>
-                           <Flyout>
-                               <StackPanel Spacing="10" Orientation="Horizontal">
-                                   <NumericUpDown Name="NumericUpDown" Minimum="1" Increment="1" Value="1"
-                                                  KeyUp="NumericUpDown_OnKeyUp"/>
-                                   <Button Click="GoButton_OnClick">Go</Button>
-                               </StackPanel>
-                           </Flyout>
-                       </Button.Flyout>
-                   </Button>
-                   <Button Name="NextButton" Click="NextButton_OnClick">Next &gt;</Button>
-                   <Button Name="LastButton" Click="LastButton_OnClick">&gt;&gt;</Button>
-                   
-                   <Button Name="RefreshButton" HorizontalAlignment="Center" 
-                           Click="RefreshButton_OnClick">Refresh</Button>
-                   <TextBox Name ="SearchTextbox" Width="200" ></TextBox>
-               </StackPanel>
-               <ListBox Name="MangaListBox" DoubleTapped="MyListBox_onDoubleTapped" KeyUp="MyListBox_OnKeyUp">
-                   <ListBoxItem><c:ItemControl/></ListBoxItem>
-                   <ListBoxItem><c:ItemControl/></ListBoxItem>
-               </ListBox>
-           </DockPanel>
-       </Panel>
+        x:Class="MangaReader.MangaList.View" Title="MangaReader">
     
+        <Panel>
+            <ProgressBar Name="LoadingProgressBar" IsIndeterminate="True"
+                         HorizontalAlignment="Center" IsVisible="False"/>
+                
+                <vc:ErrorPanel Name="ErrorPanel" IsVisible="False"/>
+                
+                <DockPanel Name="MainContent">
+                    <!-- <DockPanel DockPanel.Dock="Top"> -->
+                    <!--     <TextBox Name="MyTextBox" DockPanel.Dock="Left" Margin="10" KeyDown="OnkeyDown"> -->
+                    <!--         <TextBox.InnerRightContent> -->
+                    <!--             <Button Name="MyClearButtom" Click="MyClearButtom_OnClick">Clear</Button> -->
+                    <!--         </TextBox.InnerRightContent> -->
+                    <!--     </TextBox> -->
+                    <!--     <Button DockPanel.Dock="Right" Name="MyApplyButton" Click="MyApplyButton_OnClick"> -->
+                    <!--         Apply -->
+                    <!--     </Button> -->
+                    <!-- </DockPanel> -->
+                    <Grid ColumnDefinitions="*, Auto" DockPanel.Dock="Top">
+                        <TextBox Grid.Column="0" Margin="10" Name="MyTextBox" KeyDown="OnkeyDown">
+                            <TextBox.InnerRightContent>
+                                <Button Name="MyClearButtom" Click="MyClearButtom_OnClick">Clear</Button>
+                            </TextBox.InnerRightContent>
+                        </TextBox>
+                        <Button Grid.Column="1" Name="MyApplyButton" Click="MyApplyButton_OnClick" Margin="0 0 10 0">
+                            Apply
+                        </Button>
+                    </Grid>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="10"
+                                HorizontalAlignment="Center">
+                        <Label Name="TotalMangaNumberLabel" VerticalAlignment="Center" 
+                               FontWeight="Bold" Content="123 mangas"/>
+                        
+                        <Button Name="FirstButton" Click="FirstButton_OnClick">&lt;&lt;</Button>
+                        <Button Name="PrevButton" Click="PrevButton_OnClick">&lt; Prev</Button>
+                        <Button Name="CurrentPageButton" Background="DarkOrange" Foreground="Black">
+                            Page 1 of 234
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel Spacing="10" Orientation="Horizontal">
+                                        <NumericUpDown Name="NumericUpDown" Minimum="1" Increment="1" Value="1" 
+                                                       KeyUp="NumericUpDown_OnKeyUp"/>
+                                        <Button Click="GoButton_OnClick">Go</Button>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <Button Name="NextButton" Click="NextButton_OnClick">Next &gt;</Button>
+                        <Button Name="LastButton" Click="LastButton_OnClick">&gt;&gt;</Button>
+                        
+                        <!-- <Button Name="RefreshButton" HorizontalAlignment="Center" -->
+                        <!--         Click="RefreshButton_OnClick">Refresh</Button> -->
+                    </StackPanel>
+                    <ListBox Name="MangaListBox" DoubleTapped="MyListBox_OnDoubleTapped" KeyUp="MyListBox_OnkeyUp">
+                        <ListBoxItem><c:ItemControl/></ListBoxItem>
+                        <ListBoxItem><c:ItemControl/></ListBoxItem>
+                    </ListBox>
+                </DockPanel>
+        </Panel>
+        
 </Window>

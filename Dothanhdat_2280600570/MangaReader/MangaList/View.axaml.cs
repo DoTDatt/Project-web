@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection.Metadata.Ecma335;
+using System.Net;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -9,22 +9,34 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using MangaReader.DomainCommon;
 
 namespace MangaReader.MangaList;
 
 public partial class View : Window, IView
 {
-    private readonly Presenter? presenter;
-    private readonly List<ItemControl> itemcontrols = new();
+
+    // private  Presenter? presenter;
+    private  readonly Presenter? presenter;
+    private readonly Http? http;
+    
+    private readonly List<ItemControl> itemControls = new();
+    
     public View()
     {
         InitializeComponent();
     }
-
-    public View(Presenter? presenter) : this()
+    
+    // public void SetPresenter(Presenter presenter)
+    public View(string baseUrl, Http http) : this()
     {
-        this.presenter = presenter;
-        this.ErrorPanel.RetryButton.Click += (sender, args) => this.presenter?.Load();
+        // this.presenter = presenter;
+        // this.ErrorPanel.RetryButton.Click += (sender, args) => this.presenter?.Load();
+
+        this.http = http;
+        var domain = new Domain(baseUrl, http);
+        presenter = new Presenter(domain, this);
+        this.ErrorPanel.RetryButton.Click += (sender, args) => presenter.Load();
     }
 
     public void SetLoadingVisible(bool value)
@@ -36,7 +48,7 @@ public partial class View : Window, IView
     {
         this.ErrorPanel.IsVisible = value;
     }
-
+    // ---------- 2 ---------
     public void SetMainContentVisible(bool value)
     {
         this.MainContent.IsVisible = value;
@@ -74,23 +86,23 @@ public partial class View : Window, IView
 
     public void SetListBoxContent(IEnumerable<Item> items)
     {
-        itemcontrols.Clear();
+        itemControls.Clear();
         this.MangaListBox.Items.Clear();
         foreach (var item in items)
         {
             var itemControl = new ItemControl();
             itemControl.TitleTextBlock.Text = item.Title;
-            itemControl.ChapterNumberTextBlock.Text = item.LastChapter;
+            itemControl.ChapterNumberTextBlock.Text = item.ChapterNumber;
             ToolTip.SetTip(itemControl.CoverBorder, item.ToolTip);
-            itemcontrols.Add(itemControl);
-            this.MangaListBox.Items.Add(new ListBoxItem{Content = itemControl});
+            itemControls.Add(itemControl);
+            this.MangaListBox.Items.Add(new ListBoxItem { Content = itemControl});
         }
     }
 
     public void SetCover(int index, byte[]? bytes)
     {
         var errorCoverBackground = Brushes.DeepPink;
-        var itemControl = itemcontrols[index];
+        var itemControl = itemControls[index];
         if (bytes == null)
         {
             itemControl.CoverBorder.Background = errorCoverBackground;
@@ -115,24 +127,59 @@ public partial class View : Window, IView
     }
 
     public void SetLastButtonAndNextButtonEnabled(bool value)
-        {
-            this.LastButton.IsEnabled = value;
-            this.NextButton.IsEnabled = value;
-        }
+    {
+        this.LastButton.IsEnabled = value;
+        this.NextButton.IsEnabled = value;
+    }
 
     public void HideFlyout()
-        {
-            this.CurrentPageButton.Flyout?.Hide();
-        }
+    {
+        this.CurrentPageButton.Flyout?.Hide();
+    }
 
     public void SetErrorMessage(string text)
-        {
-            this.ErrorPanel.MessageTextBlock.Text = text;
-        }
+    {
+        this.ErrorPanel.MessageTextBlock.Text = text;
+    }
 
     public string? GetFilterText()
     {
-        return SearchTextbox.Text;
+        return this.MyTextBox.Text;
+    }
+
+    public void OpenMangaDetail(string mangaUrl)
+    {
+        var window = new MangaDetail.View(mangaUrl, http!);
+        window.Show(owner:this);
+    }
+
+
+    private void MyListBox_OnDoubleTapped(object? sender, TappedEventArgs e)
+    {
+        presenter?.SelectManga(this.MangaListBox.SelectedIndex);
+    }
+
+    private void MyListBox_OnkeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            presenter?.SelectManga(this.MangaListBox.SelectedIndex);
+        }
+    }
+    // -----------------------------------------------------------------------
+    // private void RefreshButton_OnClick(object? sender, RoutedEventArgs e)
+    // {
+    //     presenter?.Load();
+    // }
+
+    private void PrevButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        presenter?.GoPrevPage();
+    }
+
+    private void NextButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        presenter?.GoNextPage();
     }
 
     private void FirstButton_OnClick(object? sender, RoutedEventArgs e)
@@ -140,9 +187,14 @@ public partial class View : Window, IView
         presenter?.GoFirstPage();
     }
 
-    private void PrevButton_OnClick(object? sender, RoutedEventArgs e)
+    private void LastButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        presenter?.GoPrevPage();
+        presenter?.GoLastPage();
+    }
+
+    private void GoButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        presenter?.GoSpecificPage();
     }
 
     private void NumericUpDown_OnKeyUp(object? sender, KeyEventArgs e)
@@ -151,37 +203,28 @@ public partial class View : Window, IView
         presenter?.GoSpecificPage();
     }
 
-    private void GoButton_OnClick(object? sender, RoutedEventArgs e)
+    private void MyClearButtom_OnClick(object? sender, RoutedEventArgs e)
     {
-        presenter?.GoSpecificPage();
+        if (this.MyTextBox.Text == null) return;
+        else
+        {
+            this.MyTextBox.Text = "";
+        }
     }
 
-    private void NextButton_OnClick(object? sender, RoutedEventArgs e)
+    private void MyApplyButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        presenter?.GoNextPage();
+        presenter?.ApplyFilter();
     }
 
-    private void LastButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        presenter?.GoLastPage();
-    }
-
-    private void RefreshButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        presenter?.Load();
-    }
-
-    private void MyListBox_onDoubleTapped(object? sender, TappedEventArgs e)
-    {
-        Console.WriteLine("selected: " + this.MangaListBox.SelectedIndex);
-    }
-
-    private void MyListBox_OnKeyUp(object? sender, KeyEventArgs e)
+    private void OnkeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
         {
-            Console.WriteLine("selected: " + this.MangaListBox.SelectedIndex);
+            presenter?.ApplyFilter();
         }
     }
-}
+
+
     
+}

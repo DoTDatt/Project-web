@@ -1,18 +1,23 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="60"
              x:Class="MangaReader.MangaList.ItemControl">
+    
     <DockPanel Height="60">
         <Border Name="CoverBorder" Background="Silver">
             <Image Name="CoverImage" Width="60" Stretch="UniformToFill"/>
         </Border>
+        
         <StackPanel Margin="10">
             <TextBlock Name="TitleTextBlock" FontSize="18" TextTrimming="CharacterEllipsis">
                 Dragon Balls
             </TextBlock>
+            
             <TextBlock Name="ChapterNumberTextBlock">123 chapters</TextBlock>
         </StackPanel>
+        
     </DockPanel>
+    
 </UserControl>

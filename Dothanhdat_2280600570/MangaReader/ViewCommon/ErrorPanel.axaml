@@ -1,22 +1,33 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="250"
              x:Class="MangaReader.ViewCommon.ErrorPanel">
+    
     <DockPanel Margin="20">
-        <Button Name="RetryButton"
+        <Button Name="RetryButton" Margin="0 20 0 0"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Center"
                 DockPanel.Dock="Bottom">
             Retry
         </Button>
-        <TextBlock Name="MessageTextBlock"
-                   Foreground="Red"
-                   FontSize="70"
-                   FontFamily="Courier"
-                   TextWrapping="Wrap">
-            Oops! Something went wrong.
-        </TextBlock>
+        <!-- <TextBlock Name="MessageTextBlock" -->
+        <!--            Foreground="Red" -->
+        <!--            FontSize="70" -->
+        <!--            FontFamily="Courier" -->
+        <!--            TextWrapping="Wrap"> -->
+        <!--     Oops! Something went wrong. -->
+        <!-- </TextBlock> -->
+        <ScrollViewer>
+            <TextBlock Name="MessageTextBlock"
+                       Foreground="Red"
+                       FontSize="70"
+                       FontFamily="Courier"
+                       TextWrapping="Wrap">
+                Oops! Something went wrong.
+            </TextBlock>
+        </ScrollViewer>
     </DockPanel>
+    
 </UserControl>
