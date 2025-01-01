@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -9,8 +10,9 @@ using MangaReader.DomainCommon;
 
 namespace MangaReader.MangaDetail;
 
-public partial class Overview : UserControl
+public partial class Overview : UserControl, IDisposable
 {
+    private readonly CancellationTokenSource cts = new();
     public Overview()
     {
         InitializeComponent();
@@ -37,9 +39,10 @@ public partial class Overview : UserControl
 
     private async void LoadCover(Http http, string url)
     {
+        var token = cts.Token;
         try
         {
-            var data = await http.GetBytesAsync(url);
+            var data = await http.GetBytesAsync(url, token);
             using var stream = new MemoryStream(data);
             this.CoverImage.Source = new Bitmap(stream);
         }
@@ -49,4 +52,12 @@ public partial class Overview : UserControl
             this.Border.Background = Brushes.DeepPink;
         }
     }
+
+    public void Dispose()
+    {
+        cts.Cancel();
+        cts.Dispose();
+        ViewCommon.Utils.DisposeImageSource(this.CoverImage);
+    }
+    
 }

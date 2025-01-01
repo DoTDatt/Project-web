@@ -6,7 +6,7 @@
              x:Class="MangaReader.MangaDetail.Overview">
    
    
-    <Grid ColumnDefinitions="6*, 5*">
+    <Grid ColumnDefinitions="5*, 2*">
         <StackPanel Grid.Column="0"
                     Margin="20 ">
             <TextBlock Name="TitleTextBlock" FontSize="32"

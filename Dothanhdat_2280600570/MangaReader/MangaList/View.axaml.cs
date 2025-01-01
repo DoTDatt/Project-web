@@ -86,8 +86,12 @@ public partial class View : Window, IView
 
     public void SetListBoxContent(IEnumerable<Item> items)
     {
-        itemControls.Clear();
         this.MangaListBox.Items.Clear();
+        foreach (var itemControl in itemControls)
+        {
+            ViewCommon.Utils.DisposeImageSource(itemControl.CoverImage);
+        }
+        itemControls.Clear();
         foreach (var item in items)
         {
             var itemControl = new ItemControl();
@@ -224,7 +228,5 @@ public partial class View : Window, IView
             presenter?.ApplyFilter();
         }
     }
-
-
     
 }

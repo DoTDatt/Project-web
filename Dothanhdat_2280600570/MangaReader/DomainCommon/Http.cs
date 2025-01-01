@@ -1,17 +1,17 @@
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MangaReader.DomainCommon;
 
-public class Http: IDisposable
+public class Http : IDisposable
 {
     private readonly HttpClient client = new();
 
     public Http()
     {
-        client.DefaultRequestHeaders.Add("User-Agent","MangaReader");
+        client.DefaultRequestHeaders.Add("User-Agent", "MangaReader");
     }
 
     public Task<string> GetStringAsync(string url)
@@ -40,8 +40,7 @@ public class Http: IDisposable
     {
         try
         {
-            using var message = await client.GetAsync(url, token);
-            return await message.Content.ReadAsByteArrayAsync(token);
+            return await client.GetByteArrayAsync(url, token);
         }
         catch (HttpRequestException ex)
         {
@@ -53,4 +52,5 @@ public class Http: IDisposable
     {
         client.Dispose();
     }
+    
 }

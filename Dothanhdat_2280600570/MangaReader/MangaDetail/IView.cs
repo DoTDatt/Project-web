@@ -6,4 +6,5 @@ public interface IView
     void ShowErrorPanel(string msg);
     void ShowMangaContent(Manga manga);
     void ShowOverview(string title, int chapterNumber, string description, string coverUrl);
+    void ShowChapter(string chapterUrl);
 }

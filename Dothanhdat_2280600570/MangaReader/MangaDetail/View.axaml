@@ -4,26 +4,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vc="clr-namespace:MangaReader.ViewCommon"
         xmlns:Child="clr-namespace:MangaReader.MangaDetail"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="800"
         x:Class="MangaReader.MangaDetail.View"
         Title="View">
     
         
         <Panel>
-                <ProgressBar Name="LoadingProgressBar" IsIndeterminate="True"
+                <ProgressBar Name="ProgressBar" IsIndeterminate="True"
                              HorizontalAlignment="Center" IsVisible="False"/>
                 <vc:ErrorPanel Name="ErrorPanel" IsVisible="False"/>
                 
-                <Grid ColumnDefinitions="1*, 4*" Name="MangaContent">
-                    <ListBox Grid.Column="0" Name="ListBox" SelectionChanged="ListBox_OnSelectionChanged" SelectionMode="Multiple">
+                <Grid Name="MangaContent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" MinWidth="150" MaxWidth="350"/>
+                        <ColumnDefinition Width="4" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ListBox Grid.Column="0" Name="ListBox" SelectionChanged="ListBox_OnSelectionChanged" SelectionMode="Multiple"
+                             MinWidth="150">
                         <ListBoxItem/>
                     </ListBox>
                     
-                    <!-- <Panel Grid.Column="1" Name="MainPanel"> -->
-                        <ContentControl Grid.Column="1" Name="MainPanel">
-                            <Child:Overview/>
-                        </ContentControl>
-                    <!-- </Panel> -->
+                    <GridSplitter Grid.Column="1" ResizeDirection="Columns"
+                                  />
+                    
+                    <Border Grid.Column="2" Name="MainPanel">
+                        <Child:Overview/>
+                    </Border>
                 </Grid>
                 
         </Panel>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Linq;
 using System.Threading.Tasks;
 using Fizzler.Systems.HtmlAgilityPack;
@@ -47,9 +48,9 @@ public class Domain
         this.http = http;
     }
 
-    public async Task<Manga> LoadManga()
+    public async Task<Manga> LoadManga(CancellationToken token)
     {
-        var html = await http.GetStringAsync(mangaUrl);
+        var html = await http.GetStringAsync(mangaUrl, token);
         var doc = new HtmlDocument();
         doc.LoadHtml(html);
         var docNode = doc.DocumentNode;

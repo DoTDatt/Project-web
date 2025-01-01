@@ -24,34 +24,49 @@ public partial class View : Window, IView
         this.http = http;
         var domain = new Domain(mangaUrl, http);
         presenter = new Presenter(domain, this);
-        this.ErrorPanel.RetryButton.Click += (sender, args) => presenter.LoadManga();
+        this.ErrorPanel.RetryButton.Click += (sender, args) => presenter.Retry();
     }
 
     public void ShowLoadingManga()
     {
         this.MangaContent.IsVisible = false;
         this.ErrorPanel.IsVisible = false;
-        this.LoadingProgressBar.IsVisible = true;
+        this.ProgressBar.IsVisible = true;
         this.Title = "Loading...";
     }
 
     public void ShowErrorPanel(string msg)
     {
-        this.LoadingProgressBar.IsVisible = false;
+        this.ProgressBar.IsVisible = false;
         this.MangaContent.IsVisible = false;
         this.ErrorPanel.MessageTextBlock.Text = msg;
         this.ErrorPanel.IsVisible = true;
         this.Title = "Error";
     }
 
+    private void SetMainPanelChild(Control control)
+    {
+        if (this.MainPanel.Child is IDisposable d)
+        {
+            d.Dispose();
+        }
+
+        this.MainPanel.Child = control;
+    }
+    
     public void ShowOverview(string title, int chapterNumber, string description, string coverUrl)
     {
-        this.MainPanel.Content = new Overview(this.http!, title, chapterNumber, description, coverUrl);
+        this.SetMainPanelChild(new Overview(this.http!, title, chapterNumber, description, coverUrl));
     }
 
+    public void ShowChapter(string chapterUrl)
+    {
+        this.SetMainPanelChild(new ChapterDetail.View(chapterUrl, http!));
+    }
+    
     public void ShowMangaContent(Manga manga)
     {
-        this.LoadingProgressBar.IsVisible = false;
+        this.ProgressBar.IsVisible = false;
         this.ErrorPanel.IsVisible = false;
         this.MangaContent.IsVisible = true;
 
@@ -65,8 +80,7 @@ public partial class View : Window, IView
 
         this.ListBox.SelectedIndex = 0;
 
-        this.MainPanel.Content = 
-            new Overview(this.http!, manga.Title, manga.Chapters.Count, manga.Description, manga.CoverUrl);
+        this.ShowOverview(manga.Title, manga.Chapters.Count, manga.Description, manga.CoverUrl);
         this.Title = manga.Title;
     }
 
@@ -78,5 +92,12 @@ public partial class View : Window, IView
         }
     }
     
+    protected override void OnClosed(EventArgs e)
+    {
+        if (this.MainPanel.Child is IDisposable d)
+        {
+            d.Dispose();
+        }
+    }
     
 }

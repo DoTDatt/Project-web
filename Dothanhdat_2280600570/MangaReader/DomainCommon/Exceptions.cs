@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace MangaReader.DomainCommon;
 
@@ -14,4 +14,3 @@ public class ParseException : Exception
 {
     
 }
-    
