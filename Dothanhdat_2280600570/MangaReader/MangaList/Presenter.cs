@@ -24,6 +24,7 @@ public class Presenter
         this.domain = domain;
         if (this.view != null) return;
         this.view = view;
+        view.SetFavoritesMangas(domain.GetFavoritesMangaTitles());
         this.Load();
     }
 
@@ -74,7 +75,8 @@ public class Presenter
             ( 
                 manga.Title,
                 manga.LastChapter + " chapters",
-                manga.Description
+               description: manga.Description,
+                isFavorites: domain.IsFavoritesManga(manga.MangaUrl)
             ))
         );
         view.SetMainContentVisible(true);
@@ -197,6 +199,34 @@ public class Presenter
         if (index < 0 || index >= list.CurrentPage.Count) return;
         var mangaUrl = list.CurrentPage[index].MangaUrl;
         view.OpenMangaDetail(mangaUrl);
+    }
+
+
+    public void SelectFavoritesManga(int index)
+    {
+        var mangaUrl = domain.GetFavoritesMangaUrl(index);
+        if (mangaUrl != null)
+        {
+            view.OpenMangaDetail(mangaUrl);
+        }
+    }
+
+    public void ToggleFavoritesManga(int index)
+    {
+        if (list == null) return;
+        if (index < 0 || index >= list.CurrentPage.Count) return;
+        var manga = list.CurrentPage[index];
+        if (domain.IsFavoritesManga(manga.MangaUrl))
+        {
+            domain.RemoveFavoritesManga(manga.MangaUrl);
+            view.UpdateFavoritesManga(index, false);
+        }
+        else
+        {
+            domain.AddFavoritesManga(manga.MangaUrl, manga.Title);
+            view.UpdateFavoritesManga(index, true);
+        }
+        view.SetFavoritesMangas(domain.GetFavoritesMangaTitles());
     }
     
     public void GoLastPage()

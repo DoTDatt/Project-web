@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\panhh\\RiderProjects\\Dothanhdat_2280600570\\MangaReader\\MangaReader.csproj": {}
+    "C:\\Users\\panhh\\Downloads\\Project-web\\Dothanhdat_2280600570\\MangaReader\\MangaReader.csproj": {}
   },
   "projects": {
-    "C:\\Users\\panhh\\RiderProjects\\Dothanhdat_2280600570\\MangaReader\\MangaReader.csproj": {
+    "C:\\Users\\panhh\\Downloads\\Project-web\\Dothanhdat_2280600570\\MangaReader\\MangaReader.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\panhh\\RiderProjects\\Dothanhdat_2280600570\\MangaReader\\MangaReader.csproj",
+        "projectUniqueName": "C:\\Users\\panhh\\Downloads\\Project-web\\Dothanhdat_2280600570\\MangaReader\\MangaReader.csproj",
         "projectName": "MangaReader",
-        "projectPath": "C:\\Users\\panhh\\RiderProjects\\Dothanhdat_2280600570\\MangaReader\\MangaReader.csproj",
+        "projectPath": "C:\\Users\\panhh\\Downloads\\Project-web\\Dothanhdat_2280600570\\MangaReader\\MangaReader.csproj",
         "packagesPath": "C:\\Users\\panhh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\panhh\\RiderProjects\\Dothanhdat_2280600570\\MangaReader\\obj\\",
+        "outputPath": "C:\\Users\\panhh\\Downloads\\Project-web\\Dothanhdat_2280600570\\MangaReader\\obj\\",
         "projectStyle": "PackageReference",
         "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
@@ -67,6 +67,10 @@
             "Fizzler.Systems.HtmlAgilityPack": {
               "target": "Package",
               "version": "[1.2.1, )"
+            },
+            "LiteDB": {
+              "target": "Package",
+              "version": "[5.0.21, )"
             }
           },
           "imports": [

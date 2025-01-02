@@ -17,9 +17,10 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             const string baseUrl = "https://apptruyen247.com";
+            const string dbFile = "MangaReader.db";
             var http = new Http();
             
-            desktop.MainWindow = new MangaList.View(baseUrl, http);
+            desktop.MainWindow = new MangaList.View(baseUrl, http, dbFile);
         }
 
         base.OnFrameworkInitializationCompleted();

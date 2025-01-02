@@ -4,26 +4,19 @@ namespace MangaReader.MangaList;
 
 public class Item
 {
-    // public string Title { get; init; } = null!;
-    // public string LastChapter { get; init; } = null!;
-    // public string Description { get; init; } = null!;
-
     public string Title { get; init; } = null!;
     public string ChapterNumber { get; init; } = null!;
     public string Description { get; init; } = null!;
+    public bool IsFavorites { get; }
 
-    public Item(string title, string chapterNumber, string description)
+    public Item(string title, string chapterNumber, string description, bool isFavorites)
     {
         Title = title;
         ChapterNumber = chapterNumber;
         Description = description;
+        IsFavorites = isFavorites;
     }
-
-    // public Item()
-    // {
-    //     throw new System.NotImplementedException();
-    // }
-
+    
     public string ToolTip => this.Title + " - " + this.Description;
 }
 
@@ -53,4 +46,7 @@ public interface IView
     string? GetFilterText();
 
     void OpenMangaDetail(string mangaUrl);
+
+    void SetFavoritesMangas(IEnumerable<string> mangaTitles);
+    void UpdateFavoritesManga(int index, bool value);
 }

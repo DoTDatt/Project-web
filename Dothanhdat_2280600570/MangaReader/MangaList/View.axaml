@@ -15,6 +15,9 @@
                 <vc:ErrorPanel Name="ErrorPanel" IsVisible="False"/>
                 
                 <DockPanel Name="MainContent">
+                    <Menu DockPanel.Dock="Top">
+                        <MenuItem Header="Favorites" Name="FavoritesMenuItem"/>
+                    </Menu>
                     <!-- <DockPanel DockPanel.Dock="Top"> -->
                     <!--     <TextBox Name="MyTextBox" DockPanel.Dock="Left" Margin="10" KeyDown="OnkeyDown"> -->
                     <!--         <TextBox.InnerRightContent> -->

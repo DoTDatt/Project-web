@@ -38,6 +38,18 @@ public class Manga
     public string MangaUrl { get; init; }
 }
 
+public class FavoritesManga
+{
+    public string Url { get; }
+    public string Title { get; }
+
+    public FavoritesManga(string url, string title)
+    {
+        this.Url = url;
+        this.Title = title;
+    }
+}
+
 public class MangaList
 {
     // public int TotalMangaNumber { get; init; }
@@ -62,20 +74,33 @@ public class Domain
 {
     private readonly string baseUrl;
     private readonly Http http;
+    private readonly IDb db;
+    private readonly List<FavoritesManga> favoritesMangas;
 
-    public Domain(string baseUrl, Http http)
+    public Domain(string baseUrl, Http http, IDb db)
     {
         this.baseUrl = baseUrl;
         this.http = http;
+        // favoritesMangas = new List<FavoritesManga>
+        // {
+        //     new("https://blogtruyen247.com/527/teppi", "Teppi"),
+        //     new("https://blogtruyen247.com/118/conan", "Conan")
+        // };
+        this.db = db;
+        favoritesMangas = db.LoadFavoritesMangas();
+        this.SortFavoritesMangas();
     }
 
-    private async Task<string> DownloadHtml(int page, string filterText)
+    private void SortFavoritesMangas()
+    {
+        favoritesMangas.Sort((manga1, manga2) => 
+            string.Compare(manga1.Title, manga2.Title, StringComparison.OrdinalIgnoreCase)
+        );
+    }
+    
+    private Task<string> DownloadHtml(int page, string filterText)
     {
         if (page < 1) page = 1;
-        //hdcphu@ updated for https://apptruyen247.com
-        // var url = $"{this.baseUrl}/filter?status=0&sort=updatedAt&page={page}";
-        // Console.WriteLine($"Downloading page {page} from {url}");
-        // return await http.GetStringAsync(url);
         string url;
         if (filterText == "")
         {
@@ -87,16 +112,15 @@ public class Domain
             url = $"{this.baseUrl}/tim-kiem?keyword={text}&page={page}";
         }
         Console.WriteLine($"Downloading page {page} form {url}");
-        return await http.GetStringAsync(url);
-    }
+        // return await http.GetStringAsync(url);
+        return http.GetStringAsync(url);
 
-    // private int ParseTotalMangeNumber(XmlDocument doc)
-    // {
-    //     //hdcphu@ updated for https://apptruyen247.com
-    //     var text = doc.DocumentElement!.FirstChild!.FirstChild!.InnerText.Trim();
-    //     var number = text.Substring(7);
-    //     return int.Parse(number);
-    // }
+        // if (page < 1) page = 1;
+        // var txt = HttpUtility.UrlDecode(filterText);
+        // var url = $"{this.baseUrl}/timKiem/nangcao/1/0/-1/-1?txt={txt}&p={page}";
+        // return http.GetStringAsync(url);
+
+    }
 
     private int FindTotalPageNumber(string html)
     {
@@ -115,15 +139,6 @@ public class Domain
     //hdcphu@ updated for https://apptruyen247.com
     private int ParseTotalPageNumber(HtmlNode section)
     {
-        // var div = doc.DocumentElement!.ChildNodes[3]!;
-        // var span = div.LastChild!;
-        // if (span.Attributes!["class"]!.Value == "current_page")
-        //     return int.Parse(span.InnerText);
-        // var href = span.FirstChild!.Attributes!["href"]!.Value;
-        // var openingParenthesisIndex = href.LastIndexOf('(');
-        // var number = href.Substring(openingParenthesisIndex + 1, href.Length - openingParenthesisIndex - 2);
-        // return int.Parse(number);
-
         var a = section.QuerySelector("nav.paging-new li:last-child > a");
         if (a == null)
             return 1;
@@ -207,5 +222,39 @@ public class Domain
     public Task<byte[]> LoadBytes(string url, CancellationToken token)
     {
         return http.GetBytesAsync(url, token);
+    }
+
+    public IEnumerable<string> GetFavoritesMangaTitles()
+    {
+        return favoritesMangas.Select(favoritesMangas => favoritesMangas.Title);
+    }
+
+    public string? GetFavoritesMangaUrl(int index)
+    {
+        if (index < 0 || index >= favoritesMangas.Count)
+            return null;
+        return favoritesMangas[index].Url;
+    }
+
+    public bool IsFavoritesManga(string mangaUrl)
+    {
+        return favoritesMangas.Exists(manga => manga.Url == mangaUrl);
+    }
+
+    public void AddFavoritesManga(string url, string title)
+    {
+        if (this.IsFavoritesManga(url)) return;
+        // favoritesMangas.Add(new FavoritesManga(url, title));
+        var favoritesManga = new FavoritesManga(url, title);
+        favoritesMangas.Add(favoritesManga);
+        this.SortFavoritesMangas();
+        db.InsertFavoritesManga(favoritesManga);
+    }
+
+    public void RemoveFavoritesManga(string url)
+    {
+        // this.favoritesMangas.RemoveAll(manga => manga.Url == url);
+        favoritesMangas.RemoveAll(manga => manga.Url == url);
+        db.DeleteFavoritesManga(url);
     }
 }

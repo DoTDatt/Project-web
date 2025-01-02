@@ -28,13 +28,15 @@ public partial class View : Window, IView
     }
     
     // public void SetPresenter(Presenter presenter)
-    public View(string baseUrl, Http http) : this()
+    public View(string baseUrl, Http http, string dbFile) : this()
     {
         // this.presenter = presenter;
         // this.ErrorPanel.RetryButton.Click += (sender, args) => this.presenter?.Load();
 
         this.http = http;
-        var domain = new Domain(baseUrl, http);
+        // var domain = new Domain(baseUrl, http);
+        var db = new Db(dbFile);
+        var domain = new Domain(baseUrl, http, db);
         presenter = new Presenter(domain, this);
         this.ErrorPanel.RetryButton.Click += (sender, args) => presenter.Load();
     }
@@ -92,14 +94,27 @@ public partial class View : Window, IView
             ViewCommon.Utils.DisposeImageSource(itemControl.CoverImage);
         }
         itemControls.Clear();
+        var index = -1;
         foreach (var item in items)
         {
-            var itemControl = new ItemControl();
-            itemControl.TitleTextBlock.Text = item.Title;
-            itemControl.ChapterNumberTextBlock.Text = item.ChapterNumber;
-            ToolTip.SetTip(itemControl.CoverBorder, item.ToolTip);
+            // var itemControl = new ItemControl();
+            // itemControl.TitleTextBlock.Text = item.Title;
+            // itemControl.ChapterNumberTextBlock.Text = item.ChapterNumber;
+            // ToolTip.SetTip(itemControl.CoverBorder, item.ToolTip);
+            // itemControls.Add(itemControl);
+            // this.MangaListBox.Items.Add(new ListBoxItem { Content = itemControl});
+            index++;
+            var itemControl = new ItemControl
+            {
+                Title = item.Title,
+                ChapterNumber = item.ChapterNumber,
+                CoverToolTip = item.ToolTip,
+                IsFavorites = item.IsFavorites
+            };
+            var i = index;
+            itemControl.FavoritesButton.Click += (s, e) => presenter?.ToggleFavoritesManga(i);
             itemControls.Add(itemControl);
-            this.MangaListBox.Items.Add(new ListBoxItem { Content = itemControl});
+            this.MangaListBox.Items.Add(new ListBoxItem{Content = itemControl});
         }
     }
 
@@ -158,6 +173,25 @@ public partial class View : Window, IView
     }
 
 
+    public void SetFavoritesMangas(IEnumerable<string> mangaTitles)
+    {
+        this.FavoritesMenuItem.Items.Clear();
+        var index = -1;
+        foreach (var title in mangaTitles)
+        {
+            index++;
+            var item = new MenuItem { Header = title };
+            var i = index;
+            item.Click += (s, e) => presenter?.SelectFavoritesManga(i);
+            this.FavoritesMenuItem.Items.Add(item);
+        }
+    }
+
+    public void UpdateFavoritesManga(int index, bool value)
+    {
+        itemControls[index].IsFavorites = value;
+    }
+    
     private void MyListBox_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
         presenter?.SelectManga(this.MangaListBox.SelectedIndex);
